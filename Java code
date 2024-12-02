@@ -1,0 +1,258 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+public class Main extends Frame {
+ 
+// Job class to store job details
+ static class Job {
+ String title;
+ String type;
+ String description;
+ String domain;
+ public Job(String title, String type, String description, String domain) {
+ this.title = title;
+ this.type = type;
+ this.description = description;
+ this.domain = domain;
+ }
+ @Override
+ public String toString() {
+ return "Job Title: " + title + "\nType: " + type + "\nDomain: " + domain + 
+"\nDescription: "
+ + description;
+ }
+ }
+ // Application class to store application details
+ static class Application {
+ String jobTitle;
+ String applicantName;
+ String dob;
+ String qualification;
+ String phone;
+ public Application(String jobTitle, String applicantName, String dob, String 
+qualification,String phone) {
+ this.jobTitle = jobTitle;
+ this.applicantName = applicantName;
+ this.dob = dob;
+ this.qualification = qualification;
+ this.phone = phone;
+ }
+ @Override
+ public String toString() {
+return "Job Title: " + jobTitle + "\nApplicant Name: " + applicantName + 
+"\nDOB: " + dob
+ +
+ "\nQualification: " + qualification + "\nPhone: " + phone;
+ }
+ }
+ static List<Job> jobs = new ArrayList<>();
+ static List<Application> applications = new ArrayList<>();
+ public Main() {
+ populateJobs();
+ setTitle("Job Portal");
+ setSize(500, 500);
+ setLayout(new FlowLayout());
+ setBackground(Color.LIGHT_GRAY);
+ Label welcomeLabel = new Label("Welcome to the Job Portal!");
+ welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+ add(welcomeLabel);
+ Button employerButton = new Button("Employer");
+ Button jobSeekerButton = new Button("Job Seeker");
+ add(employerButton);
+ add(jobSeekerButton);
+ employerButton.addActionListener(e -> handleEmployer());
+ jobSeekerButton.addActionListener(e -> handleJobSeeker());
+ addWindowListener(new WindowAdapter() {
+ public void windowClosing(WindowEvent we) {
+ System.exit(0);
+ }
+ });
+ setVisible(true);
+ }
+ private void handleEmployer() {
+ Frame employerFrame = new Frame("Employer Portal");
+ employerFrame.setSize(500, 600);
+ employerFrame.setLayout(new FlowLayout());
+ employerFrame.setBackground(Color.LIGHT_GRAY);
+// Job posting section
+ Label postJobLabel = new Label("Post a New Job:");
+ Label titleLabel = new Label("Enter Job Title:");
+ TextField titleField = new TextField(30);
+ Label typeLabel = new Label("Full-Time or Part-Time:");
+ TextField typeField = new TextField(30);
+ Label descriptionLabel = new Label("Enter Job Description:");
+ TextField descriptionField = new TextField(30);
+ Label domainLabel = new Label("Enter Job Domain:");
+ TextField domainField = new TextField(30);
+ Button postJobButton = new Button("Post Job");
+ Label postResponseLabel = new Label();
+ postJobButton.addActionListener(e -> {
+ String title = titleField.getText();
+ String type = typeField.getText();
+String description = descriptionField.getText();
+ 
+ String domain = domainField.getText();
+ if (!title.isEmpty() && !type.isEmpty() && !description.isEmpty() &&
+ !domain.isEmpty()) {
+ jobs.add(new Job(title, type, description, domain));
+ postResponseLabel.setText("Job posted successfully!");
+ titleField.setText("");
+ typeField.setText("");
+ descriptionField.setText("");
+ domainField.setText("");
+ } else {
+ postResponseLabel.setText("All fields are required to post a job.");
+ }
+ });
+// View applications section
+ Label viewApplicationsLabel = new Label("View Applications:");
+ Button viewApplicationsButton = new Button("View Applications");
+ TextArea applicationsArea = new TextArea(15, 40);
+ viewApplicationsButton.addActionListener(e -> {
+ applicationsArea.setText("Submitted Applications:\n");
+ if (applications.isEmpty()) {
+ applicationsArea.setText("No applications submitted yet.");
+ } else {
+ for (Application application : applications) {
+ applicationsArea.append(application.toString() + "\n\n");
+ }
+ }
+ });
+ employerFrame.add(postJobLabel);
+ employerFrame.add(titleLabel);
+ employerFrame.add(titleField);
+ employerFrame.add(typeLabel);
+ employerFrame.add(typeField);
+ employerFrame.add(descriptionLabel);
+ employerFrame.add(descriptionField);
+ employerFrame.add(domainLabel);
+ employerFrame.add(domainField);
+ employerFrame.add(postJobButton);
+ employerFrame.add(postResponseLabel);
+ employerFrame.add(viewApplicationsLabel);
+ employerFrame.add(viewApplicationsButton);
+ employerFrame.add(applicationsArea);
+ employerFrame.addWindowListener(new WindowAdapter() {
+ public void windowClosing(WindowEvent we) {
+ employerFrame.dispose();
+ }
+ });
+ employerFrame.setVisible(true);
+ }
+ private void handleJobSeeker() {
+Frame jobSeekerFrame = new Frame("Job Seeker Portal");
+ jobSeekerFrame.setSize(600, 600);
+ 
+ jobSeekerFrame.setLayout(new FlowLayout());
+ jobSeekerFrame.setBackground(Color.LIGHT_GRAY);
+ Label domainLabel = new Label("Select Domain:");
+ Choice domainChoice = new Choice();
+ domainChoice.add("IT");
+ domainChoice.add("Healthcare");
+ domainChoice.add("Education");
+ domainChoice.add("Finance");
+ domainChoice.add("Engineering");
+ domainChoice.add("Marketing");
+ Button searchButton = new Button("Search Jobs");
+ TextArea jobArea = new TextArea(15, 50);
+ searchButton.addActionListener(e -> {
+ String selectedDomain = domainChoice.getSelectedItem();
+ jobArea.setText("Jobs in " + selectedDomain + " domain:\n");
+ boolean found = false;
+ for (Job job : jobs) {
+ if (job.domain.equalsIgnoreCase(selectedDomain)) {
+ jobArea.append(job.toString() + "\n\n");
+ found = true;
+ }
+ }
+ if (!found) {
+ jobArea.setText("No jobs available in " + selectedDomain + " domain.");
+ }
+ });
+ Button applyButton = new Button("Apply for Job");
+ applyButton.addActionListener(e -> {
+ Frame applyFrame = new Frame("Apply for Job");
+ applyFrame.setSize(400, 400);
+ applyFrame.setLayout(new FlowLayout());
+ applyFrame.setBackground(Color.LIGHT_GRAY);
+ Label titleLabel = new Label("Enter Job Title:");
+ TextField titleField = new TextField(30);
+ Label nameLabel = new Label("Enter Your Name:");
+ TextField nameField = new TextField(30);
+ Label dobLabel = new Label("Enter Your DOB:");
+ TextField dobField = new TextField(30);
+ Label qualificationLabel = new Label("Enter Qualification:");
+ TextField qualificationField = new TextField(30);
+ Label phoneLabel = new Label("Enter Phone Number:");
+ TextField phoneField = new TextField(30);
+ Button submitButton = new Button("Submit Application");
+ Label responseLabel = new Label();
+ submitButton.addActionListener(ae -> {
+ String jobTitle = titleField.getText();
+ String name = nameField.getText();
+ String dob = dobField.getText();
+String qualification = qualificationField.getText();
+ String phone = phoneField.getText();
+ if (!jobTitle.isEmpty() && !name.isEmpty() && !dob.isEmpty() &&
+ !qualification.isEmpty() && !phone.isEmpty()) {
+ 
+boolean jobExists = jobs.stream().anyMatch(job ->
+ job.title.equalsIgnoreCase(jobTitle));
+ if (jobExists) {
+ applications.add(new Application(jobTitle, name, dob, qualification, 
+phone));
+ responseLabel.setText("Application submitted successfully!");
+ } else {
+ responseLabel.setText("Job title not found.");
+ }
+ } else {
+ responseLabel.setText("All fields are required.");
+ }
+ });
+ applyFrame.add(titleLabel);
+ applyFrame.add(titleField);
+ applyFrame.add(nameLabel);
+ applyFrame.add(nameField);
+ applyFrame.add(dobLabel);
+ applyFrame.add(dobField);
+ applyFrame.add(qualificationLabel);
+ applyFrame.add(qualificationField);
+ applyFrame.add(phoneLabel);
+ applyFrame.add(phoneField);
+ applyFrame.add(submitButton);
+ applyFrame.add(responseLabel);
+ applyFrame.addWindowListener(new WindowAdapter() {
+ public void windowClosing(WindowEvent we) {
+ applyFrame.dispose();
+ }
+ });
+ applyFrame.setVisible(true);
+ });
+ jobSeekerFrame.add(domainLabel);
+ jobSeekerFrame.add(domainChoice);
+ jobSeekerFrame.add(searchButton);
+ jobSeekerFrame.add(jobArea);
+ jobSeekerFrame.add(applyButton);
+ jobSeekerFrame.addWindowListener(new WindowAdapter() {
+ public void windowClosing(WindowEvent we) {
+ jobSeekerFrame.dispose();
+ }
+ });
+ jobSeekerFrame.setVisible(true);
+ }
+ private void populateJobs() {
+jobs.add(new Job("Software Developer", "Full-Time", "Develop software.", "IT"));
+ jobs.add(new Job("Data Analyst", "Part-Time", "Analyze data.", "IT"));
+ jobs.add(new Job("Nurse", "Full-Time", "Provide healthcare.", "Healthcare"));
+ jobs.add(new Job("Teacher", "Full-Time", "Teach students.", "Education"));
+ jobs.add(new Job("Accountant", "Full-Time", "Manage accounts.", "Finance"));
+ jobs.add(new Job("Civil Engineer", "Full-Time", "Design infrastructure.", 
+"Engineering"));
+ jobs.add(new Job("Marketing Manager", "Full-Time", "Manage campaigns.", 
+"Marketing"));
+ }
+ public static void main(String[] args) {
+ new Main();
+ }
+}
